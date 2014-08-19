@@ -81,7 +81,7 @@ def get_flickr_photos(flickr):
     total_photos = 0
 
     def photo_page(page=1):
-        return parse_jsonp(flickr.photos_search(
+        return loads(flickr.photos_search(
             user_id=settings.flickr_user_id,
             page=page,
             per_page='100',
@@ -90,6 +90,7 @@ def get_flickr_photos(flickr):
         ))
 
     flickr_photos = photo_page()
+
     total_photos = int(flickr_photos['photos']['total'])
 
     photos.extend(flickr_photos['photos']['photo'])
@@ -131,10 +132,12 @@ Uploads a file to S3.
 
 Does not upload if debug is True.
 """
-def send_to_s3(key, filename):
+def send_to_s3(key, filename, s3_name):
     if debug:
+        print('Would have uploaded file to S3: %s' % (s3_name))
         return
     else:
+        print('Uploading file to S3: %s' % (s3_name))
         key.set_contents_from_filename(filename, headers=s3_headers, reduced_redundancy=True)
         key.make_public()
 
@@ -186,7 +189,7 @@ def main():
 
     # Flickr setup.
     import flickrapi
-    flickr = flickrapi.FlickrAPI(settings.flickr_api_key, cache=True)
+    flickr = flickrapi.FlickrAPI(settings.flickr_api_key, settings.flickr_secret, cache=False)
     photos = get_flickr_photos(flickr)
     flickr_images = build_flickr_dict(photos)
 
@@ -230,9 +233,7 @@ def main():
                 tempfilename = '%s/%s' % (temp_dir, s3_name)
 
                 resize_image(temp_file, suffix, tempfilename)
-
-                print('Uploading file to S3: %s' % (s3_name))
-                send_to_s3(k, tempfilename)
+                send_to_s3(k, tempfilename, s3_name)
 
             temp_file.close()
             #delete flickr temp file
