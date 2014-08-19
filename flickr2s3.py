@@ -204,6 +204,10 @@ def main():
     temp_dir = None
     if debug:
         temp_dir = '/tmp/flickr2s3_test'
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
+
+    upload_count = 0
 
     for flickr_id in flickr_images:
         original_url = flickr_images[flickr_id]['url_o']
@@ -234,10 +238,14 @@ def main():
 
                 resize_image(temp_file, suffix, tempfilename)
                 send_to_s3(k, tempfilename, s3_name)
+                upload_count += 1
 
             temp_file.close()
             #delete flickr temp file
     #delete temp dir
+
+    if upload_count == 0:
+        print('No files found to upload.')
 
 if __name__ == '__main__':
     main()
