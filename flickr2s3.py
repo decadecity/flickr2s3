@@ -6,7 +6,7 @@ import tempfile
 
 from hashlib import md5
 from simplejson import loads
-from urllib import urlretrieve
+from urllib.request import urlretrieve
 
 from image_magick import resize
 

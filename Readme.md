@@ -2,11 +2,11 @@
 
 Copes images in a Flickr stream to S3 and converts them to progressive/ interlaced format.
 
-## Python modules
-Requires:
+## Virtualenv
 
- * boto (for S3)
- * flickrapi (for Flickr)
+`virtualenv -p python3 venv.flickr-2-s3`
+
+`pip install -r requirements.txt`
 
 ## Command line utilities
 Requires:
