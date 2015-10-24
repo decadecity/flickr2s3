@@ -248,4 +248,6 @@ def main():
         print('No files found to upload.')
 
 if __name__ == '__main__':
+    import logging
+    logging.captureWarnings(True)
     main()
