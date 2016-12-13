@@ -162,7 +162,7 @@ Downlads a flickr URL to a temp directory.
 """
 def download_flickr_to_temp(flickr_url, temp_dir):
     download = True
-    file_name = '%s/%s.%s' % (temp_dir, md5(flickr_url).hexdigest(), get_file_extension(flickr_url))
+    file_name = '{}/{}.{}'.format(temp_dir, md5(flickr_url.encode('utf-8')).hexdigest(), get_file_extension(flickr_url))
     mode = 'w+b'
     if os.path.exists(file_name):
         mode = 'rb'
